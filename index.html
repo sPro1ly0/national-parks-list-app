@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="description" content="Search for national parks in your area.">
+    <title>National Parks Search</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <h1>Search for National Parks</h1>
+
+    <form>
+        <label for="states">Enter a State</label>
+        <input type="text" name="states" id="states" required>
+        <label for="max-number">Maximum results</label>
+        <input type="number" name="max-number" id="max-number" value="10" required>
+        <input type="submit">
+    </form>
+        
+    <p class="error-message"></p>
+
+    <section class="hidden results">
+        <ul class="result-list">
+
+        </ul>
+    </section>
+
+    <script
+    src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+    crossorigin="anonymous"></script>
+    <script src="js/index.js"></script>
+    <script src="js/states.js"></script>
+</body>
+</html>
