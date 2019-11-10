@@ -21,11 +21,11 @@ h1 {
 }
 
 form {
-    width: 612px;
+    width: 635px;
     margin: 0 auto;
 }
 
 ul {
     width: 85vw;
-    margin: 0 auto;
+    margin: 30px auto 50px;
 }

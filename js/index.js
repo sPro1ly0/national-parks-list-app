@@ -11,30 +11,31 @@ const npsParksURL = "https://developer.nps.gov/api/v1/parks";
 
 //Need to validate user input if no error messages are popping up from the API
 //stateCode requires a state's abbreviation and returns national parks for the state
-let stateAbb = null;
+let foundStates = [];
 
 function stateAbbreviations(userInput) {
-
-    //console.log(userInput); Alabama or AL
-    let upCaseInput = userInput.toUpperCase();
-
-    //capitalize input value and find it in stateSTORE array of objects
-    stateAbb = stateSTORE.find( name => name['state'] === upCaseInput || name['ab'] === upCaseInput);
-    
-    //console.log(stateAbb); {state: "ALABAMA", ab: "AL"}
-    if (typeof stateAbb === "undefined") { //if input value not found in stateSTORE
-
-        return $(".error-message").text(`No results for "${userInput}". Please enter a state.`);
-    
-    } else if (stateAbb != "undefined") { //if found let statAbb equal state's abbreviation
+    foundStates = [];
+    let states = userInput.toUpperCase().trim().split(/[, ]+/);
+    console.log(states); //['AZ','HI']
+    for (let i = 0; i < states.length; i++) {
+        if (states[i] === 'AL'|| states[i] === 'AK' || states[i] === 'AZ' || states[i] === 'AR' || states[i] === 'CA' || states[i] === 'CO' || states[i] === 'CT' || states[i] === 'DE' || states[i] === 'FL' || states[i] === 'GA' || states[i] === 'HI' || states[i] === 'ID' || states[i] === 'IL' || states[i] === 'IN' || states[i] === 'IA' || states[i] === 'KS' || states[i] === 'KY' || states[i] === 'LA' || states[i] === 'ME' || states[i] === 'MD' || states[i] === 'MA' || states[i] === 'MI' || states[i] === 'MN' || states[i] === 'MS' || states[i] === 'MO' || states[i] === 'MT' || states[i] === 'NE' || states[i] === 'NV' || states[i] === 'NH' || states[i] === 'NJ' || states[i] === 'NM' || states[i] === 'NY' || states[i] === 'NC' || states[i] === 'ND' || states[i] === 'OH' || states[i] === 'OK' || states[i] === 'OR' || states[i] === 'PA' || states[i] === 'RI' || states[i] === 'SC' || states[i] === 'SD' || states[i] === 'TN' || states[i] === 'TX' || states[i] === 'UT' || states[i] === 'VT' || states[i] === 'VA' || states[i] === 'WA' || states[i] === 'WV' || states[i] === 'WI' || states[i] === 'WY' || states[i] === 'AS' || states[i] === 'DC' || states[i] === 'PR' || states[i] === 'MP' || states[i] === 'VI') {
+            
+            $(".error-message").empty();
+            foundStates.push(states[i]);
         
-        $(".error-message").empty();
-        return stateAbb = stateAbb['ab'];
+        } else {
+
+            console.log(foundStates);
+            return $(".error-message").text(`Sorry, please make sure to enter the correct state abbreviations. Here are some parks.`);
+
+        };
     };
 
+    console.log(foundStates);
+    return foundStates;
 };
 
-function createGetRequest(params) {
+function formatQueryParams(params) {
     //params keys are put in an array equal to their values
     const queryItems = Object.keys(params)
         .map(key => `${key}=${params[key]}`);
@@ -42,17 +43,20 @@ function createGetRequest(params) {
     return queryItems.join("&");
 };
 
-function getNationalParks(stateAbb, limit=10) {
-    
+const findAddress = 'addresses';
+
+function getNationalParks(foundStates, limit=10) {
+
     const params = {
-        stateCode: stateAbb,
+        stateCode: foundStates.join(","),
+        fields: findAddress,
         limit, //default is 10
         api_key: apiKey
     };
-
-    const queryString = createGetRequest(params);
+    
+    const queryString = formatQueryParams(params);
     const url = npsParksURL + "?" + queryString;
-
+    
     console.log(url);
 
     fetch(url)
@@ -80,7 +84,8 @@ function displayResults(responseJson) {
     for (let i = 0; i < searchData.length; i++) {
         $(".result-list").append(`
         <li>
-            <h2>${searchData[i].name}</h2>
+            <h2>${searchData[i].fullName}</h2>
+            <h3>${searchData[i].addresses[0].city}, ${searchData[i].addresses[0].stateCode}</h3>
             <p>${searchData[i].description}</p>
             <a href="${searchData[i].url}">${searchData[i].url}</a>
         </li>
@@ -97,7 +102,9 @@ function findParksInState() {
         const userInput = $("#states").val();
         stateAbbreviations(userInput); //validate user input value
         const limit = $("#max-number").val();
-        getNationalParks(stateAbb, limit);
+        
+        getNationalParks(foundStates, limit);
+                
     });
 };
 
