@@ -29,3 +29,14 @@ ul {
     width: 85vw;
     margin: 30px auto 50px;
 }
+
+@media screen and (max-width: 426px) {
+    form {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        align-items: center;
+        height: 200px;
+        width: 255px;
+    }
+}
